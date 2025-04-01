@@ -1,16 +1,15 @@
+import asyncio
 import logging
-import time
+import datetime
 
-import schedule
 from aiogram import Router, types, F, Bot
 from aiogram.filters import or_f
 from aiogram.filters.command import Command
-from aiogram.types import FSInputFile, InputFile
-from aiogram.utils.formatting import as_marked_section, Bold, as_list
+from aiogram.types import FSInputFile
 
 from bot.filters.chat_tipes import ChatTypeFilter
-from parse_to_exexl import create_excel_from_dict_list
-from parsing2 import parsing
+from bot.handlers.parse_to_exexl import create_excel_from_dict_list
+from bot.handlers.parsing2 import parsing
 
 user_private_router = Router()
 user_private_router.message.filter(ChatTypeFilter(['private']))
@@ -20,7 +19,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 async def send_document(message: types.Message, bot):
-    document = FSInputFile("./handlers/excel_files/companies.xlsx")
+    document = FSInputFile("./excel_files/companies.xlsx")
     await bot.send_document(message.chat.id, document)
     logging.info("Документ отправлен")
 
@@ -33,14 +32,25 @@ async def cmd_start(message: types.Message):
 async def send_exel(message: types.Message, bot: Bot):
     await message.answer("Вот эксель документ")
     await send_document(message, bot)
-
-
+last = [0, 0]
 @user_private_router.message(or_f(Command('parse'), F.text.lower().contains('парсинг')))
 async def cmd_parse(message: types.Message, bot: Bot):
     await message.answer("Парсер работает")
     global flag
     if flag:
         flag = False
-        schedule.every(10).minutes.do(create_excel_from_dict_list(parsing(), 'companies.xlsx'))
-        schedule.every().day.at("14:21").do(send_document(message, bot))
         logging.info("парсер запущен")
+        while True:
+            last.append(parsing())
+            del last[0]
+            if 0 not in last and last[0] != last[1]:
+                for i in range(len(last[0])):
+                    if list(last[0][i].values()) != list(last[1][i].values()):
+                        await message.answer(f"{i + 1}")
+                        for k in last[i][0]:
+                            if last[0][i][k] != last[1][i][k]:
+                                await message.answer(last[1][i][k])
+            create_excel_from_dict_list(last[-1], 'companies.xlsx')
+            if int(str(datetime.datetime.now().time()).split(".")[0].split(":")[0]) == 0:
+                await send_document(message, bot)
+            await asyncio.sleep(600)

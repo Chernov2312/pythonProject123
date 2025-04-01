@@ -9,10 +9,10 @@ logging.basicConfig(level=logging.INFO)
 def create_empty_excel(columns: list, filename: str, sheet_name: str = 'Sheet1'):
     df = pd.DataFrame(columns=columns)
 
-    if not os.path.exists('bot/handlers/excel_files'):
-        os.makedirs('bot/handlers/excel_files')
+    if not os.path.exists('excel_files'):
+        os.makedirs('excel_files')
 
-    filepath = os.path.join('bot/handlers/excel_files', filename)
+    filepath = os.path.join('excel_files', filename)
     excel_writer = pd.ExcelWriter(filepath, engine='xlsxwriter')
     df.to_excel(excel_writer, index=False, sheet_name=sheet_name, freeze_panes=(1, 0))
     excel_writer._save()
@@ -32,9 +32,9 @@ def create_tabel_users():
         filename='users.xlsx')
 
 
-def parse_excel_to_dict_list(filepath: str, sheet_name='Sheet1'):
+def parse_excel_to_dict_list(sheet_name='Sheet1'):
     # Загружаем Excel файл в DataFrame
-    df = pd.read_excel(filepath, sheet_name=sheet_name)
+    df = pd.read_excel("companies")
 
     # Преобразуем DataFrame в список словарей
     dict_list = df.to_dict(orient='records')
@@ -43,9 +43,9 @@ def parse_excel_to_dict_list(filepath: str, sheet_name='Sheet1'):
 
 
 def create_excel_from_dict_list(dict_list: list, output_filename: str, sheet_name='Sheet1'):
-    if not os.path.exists('bot/handlers/excel_files'):
-        os.makedirs('bot/handlers/excel_files')
-    filepath = os.path.join('bot/handlers/excel_files', output_filename)
+    if not os.path.exists('excel_files'):
+        os.makedirs('excel_files')
+    filepath = os.path.join('excel_files', output_filename)
     wb = Workbook()
     ws = wb.active
     ws.title = sheet_name
@@ -97,5 +97,4 @@ def create_excel_from_dict_list(dict_list: list, output_filename: str, sheet_nam
     # Сохраняем файл
     wb.save(filepath)
     logging.info("Файл сохранён")
-    return filepath
 

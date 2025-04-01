@@ -14,9 +14,6 @@ from bot.common.comands import private
 from bot.handlers.user_handler import user_private_router
 
 
-
-
-
 bot = Bot(token=os.getenv('TOKEN_BOT'), default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 dp = Dispatcher()
