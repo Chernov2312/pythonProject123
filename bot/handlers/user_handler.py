@@ -41,7 +41,7 @@ async def cmd_parse(message: types.Message, bot: Bot):
         flag = False
         logging.info("парсер запущен")
         while True:
-            last.append(parsing())
+            last.append(await parsing())
             del last[0]
             if 0 not in last and last[0] != last[1]:
                 for i in range(len(last[0])):
@@ -51,6 +51,6 @@ async def cmd_parse(message: types.Message, bot: Bot):
                             if last[0][i][k] != last[1][i][k]:
                                 await message.answer(last[1][i][k])
             create_excel_from_dict_list(last[-1], 'companies.xlsx')
-            if int(str(datetime.datetime.now().time()).split(".")[0].split(":")[0]) == 0:
+            if int(str(datetime.datetime.now().time()).split(".")[0].split(":")[0]) == 19:
                 await send_document(message, bot)
             await asyncio.sleep(600)

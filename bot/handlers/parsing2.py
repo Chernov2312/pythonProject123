@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 
@@ -9,7 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def parsing():
+async def parsing():
     logging.basicConfig(level=logging.INFO)
     logging.info("парсер запущен")
     url = "https://online.minjust.gov.kg/user/search?fullNameRu=изи&operator=AND&page=0&size=50"
@@ -20,16 +21,16 @@ def parsing():
 
     driver = webdriver.Chrome(options=options)
     driver.get(url)
-    time.sleep(3)
+    await asyncio.sleep(3)
     companys = []
     for i in range(1, int(driver.find_element(By.XPATH, "/html/body/div/div[3]/main/div[1]/p").text.split()[0]) + 1):
         company = []
         company_info = dict()
-        time.sleep(2.5)
+        await asyncio.sleep(2.5)
         driver.find_element(By.XPATH,
                             f"/html/body/div/div[3]/main/div[2]/div/div/div/div/div/div/table/tbody/tr[{50 if i % 50 == 0 else i % 50}]/td[8]/div").click()
 
-        time.sleep(2.5)
+        await asyncio.sleep(2.5)
         k = ""
         for u in range(1, 3):
             for j in range(80):
