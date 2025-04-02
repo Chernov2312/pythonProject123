@@ -9,7 +9,7 @@ from aiogram.types import FSInputFile
 
 from bot.filters.chat_tipes import ChatTypeFilter
 from bot.handlers.parse_to_exexl import create_excel_from_dict_list
-from bot.handlers.parsing2 import parsing
+from bot.handlers.parsing3 import parsing
 
 user_private_router = Router()
 user_private_router.message.filter(ChatTypeFilter(['private']))

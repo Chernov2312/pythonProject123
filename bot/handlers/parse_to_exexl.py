@@ -56,7 +56,10 @@ def create_excel_from_dict_list(dict_list: list, output_filename: str, sheet_nam
         ws.append(header)  # Записываем заголовки
 
         for row in dict_list:
-            ws.append([row[col] for col in header])
+            try:
+                ws.append([row[col] for col in header])
+            except:
+                pass
 
     # Настраиваем стили для красивого вида
     header_style = NamedStyle(name='header')
