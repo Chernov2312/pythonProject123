@@ -52,8 +52,6 @@ def prokrut():
 
         except:
             pass
-        if i == 3:
-            break
 
     for i in range(1, 12):
         driver.find_element(By.XPATH, "/html/body/div[1]/div[3]/aside/div/div/form/div[8]").click()
