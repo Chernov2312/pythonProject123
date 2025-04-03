@@ -60,8 +60,13 @@ def prokrut():
         time.sleep(0.5)
         driver.find_element(By.XPATH, f"/html/body/div[2]/div/div/div[2]/div[1]/div/div/div[{1}]").click()
         driver.find_element(By.XPATH, "/html/body/div[1]/div[3]/aside/div/div/form/div[17]/div/button[2]").click()
+        time.sleep(0.1)
+        print(driver.current_url)
+        parse = parsing(driver, driver.current_url)
+        if len(parse) > 0:
+            itog.extend(parse)
         time.sleep(0.5)
-    time.sleep(1000)
     driver.quit()
+    print(itog)
     return  itog
 create_excel_from_dict_list(prokrut(), "companies.xlsx")
